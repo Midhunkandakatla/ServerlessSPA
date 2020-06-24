@@ -13,14 +13,19 @@ pipeline{
                       docker { image 'node:10' }
                   }
                   steps {
-                         sh ' echo Installing packages '
-                         sh ' npm install '
-                         sh ' npm install -g @angular/cli@8 '
-                         sh ' echo Building Angular Project '
-                         sh ' ng build '
+                         echo Installing packages
+                         npm install
+                         npm install -g @angular/cli@8
+                         echo Building Angular Project
+                         ng build
                   }
              }
-            }
-          }
-        }
-      }
+              stage("S3 Build") {
+                  steps {
+                         //aws cloudformation create-stack --stack-name S3bucketcreation --template-body file:cft.yaml
+                         aws s3api creat-bucket --bucket angular-demo-bucket --region us-east-1
+                  }
+              }
+       }
+   }
+    stage ('Deploy'){
